@@ -59,20 +59,20 @@ type JurisdictionList struct {
 	Pagination PaginationMeta `json:"pagination"`
 }
 
-type Provider struct {
+const baseUrl = "https://v3.openstates.org"
+
+const jurisdictionsEndpoint = "/jurisdictions"
+
+type JurisdictionProvider struct {
 	apiKey  string
 	baseUrl string
 }
 
-const baseUrl = "https://v3.openstates.org"
-
-func NewProvider(apiKey string) Provider {
-	return Provider{apiKey, baseUrl}
+func NewProvider(apiKey string) JurisdictionProvider {
+	return JurisdictionProvider{apiKey, baseUrl}
 }
 
-const jurisdictionsEndpoint = "/jurisdictions"
-
-func (p *Provider) ListJurisdictions(classification JurisdictionClassification, includeOrganizations bool, includeLegislativeSessions bool, page int, perPage int) (JurisdictionList, error) {
+func (p *JurisdictionProvider) ListJurisdictions(classification JurisdictionClassification, includeOrganizations bool, includeLegislativeSessions bool, page int, perPage int) (JurisdictionList, error) {
 	jurisdictionList := JurisdictionList{}
 	url := p.baseUrl + jurisdictionsEndpoint
 	req, err := http.NewRequest("GET", url, nil)
@@ -92,7 +92,7 @@ func (p *Provider) ListJurisdictions(classification JurisdictionClassification, 
 	q.Add("page", strconv.Itoa(page))
 	q.Add("per_page", strconv.Itoa(perPage))
 	req.URL.RawQuery = q.Encode()
- 
+
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -113,7 +113,7 @@ func (p *Provider) ListJurisdictions(classification JurisdictionClassification, 
 	return jurisdictionList, nil
 }
 
-func (p *Provider) GetJurisdictionDetails(jurisdictionId string, includeOrganizations bool, includeLegislativeSessions bool) (Jurisdiction, error) {
+func (p *JurisdictionProvider) GetJurisdictionDetails(jurisdictionId string, includeOrganizations bool, includeLegislativeSessions bool) (Jurisdiction, error) {
 	jurisdiction := Jurisdiction{}
 	url := p.baseUrl + jurisdictionsEndpoint + "/" + jurisdictionId
 	req, err := http.NewRequest("GET", url, nil)

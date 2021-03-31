@@ -32,7 +32,7 @@ func TestListJurisdictions(t *testing.T) {
 		ts := httptest.NewServer(http.HandlerFunc(tc.handler))
 		defer ts.Close()
 
-		p := Provider{"", ts.URL}
+		p := JurisdictionProvider{"", ts.URL}
 		_, err := p.ListJurisdictions("state", true, true, 1, 1)
 		if (err != nil) != tc.shouldFail {
 			t.Errorf("%s failed, error: %v\n", tc.description, err)
@@ -64,7 +64,7 @@ func TestGetJurisdictionDetails(t *testing.T) {
 		ts := httptest.NewServer(http.HandlerFunc(tc.handler))
 		defer ts.Close()
 
-		p := Provider{"", ts.URL}
+		p := JurisdictionProvider{"", ts.URL}
 		_, err := p.GetJurisdictionDetails("", true, true)
 		if (err != nil) != tc.shouldFail {
 			t.Errorf("%s failed, error: %v\n", tc.description, err)
