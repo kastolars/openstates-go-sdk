@@ -60,18 +60,22 @@ type JurisdictionList struct {
 }
 
 type Provider struct {
-	apiKey string
+	apiKey  string
+	baseUrl string
 }
+
+const baseUrl = "https://v3.openstates.org"
 
 func NewProvider(apiKey string) Provider {
-	return Provider{apiKey}
+	return Provider{apiKey, baseUrl}
 }
 
-const baseUrl = "https://v3.openstates.org/jurisdictions"
+const jurisdictionsEndpoint = "/jurisdictions"
 
 func (p *Provider) ListJurisdictions(classification JurisdictionClassification, includeOrganizations bool, includeLegislativeSessions bool, page int, perPage int) (JurisdictionList, error) {
 	jurisdictionList := JurisdictionList{}
-	req, err := http.NewRequest("GET", baseUrl, nil)
+	url := p.baseUrl + jurisdictionsEndpoint
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return jurisdictionList, err
 	}
@@ -88,7 +92,7 @@ func (p *Provider) ListJurisdictions(classification JurisdictionClassification, 
 	q.Add("page", strconv.Itoa(page))
 	q.Add("per_page", strconv.Itoa(perPage))
 	req.URL.RawQuery = q.Encode()
-
+ 
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -111,7 +115,7 @@ func (p *Provider) ListJurisdictions(classification JurisdictionClassification, 
 
 func (p *Provider) GetJurisdictionDetails(jurisdictionId string, includeOrganizations bool, includeLegislativeSessions bool) (Jurisdiction, error) {
 	jurisdiction := Jurisdiction{}
-	url := baseUrl + "/" + jurisdictionId
+	url := p.baseUrl + jurisdictionsEndpoint + "/" + jurisdictionId
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return jurisdiction, err

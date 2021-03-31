@@ -9,7 +9,7 @@ func main() {
 	apiKey := "9d4f7630-8a15-4334-a677-b9700cb50081"
 	p := jurisdictions.NewProvider(apiKey)
 
-	jl, err := p.ListJurisdictions("state", true, true, 1, 1)
+	jl, err := p.ListJurisdictions(jurisdictions.State, true, true, 1, 1)
 	if err != nil {
 		panic(err)
 	}
