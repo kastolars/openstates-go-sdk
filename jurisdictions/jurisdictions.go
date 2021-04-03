@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"openstates-go-sdk/pagination"
 	"strconv"
 )
 
@@ -47,16 +48,9 @@ type Jurisdiction struct {
 	LegislativeSessions []LegislativeSession       `json:"legislative_sessions"`
 }
 
-type PaginationMeta struct {
-	PerPage    int `json:"per_page"`
-	Page       int `json:"page"`
-	MaxPage    int `json:"max_page"`
-	TotalItems int `json:"total_items"`
-}
-
 type JurisdictionList struct {
-	Results    []Jurisdiction `json:"results"`
-	Pagination PaginationMeta `json:"pagination"`
+	Results    []Jurisdiction            `json:"results"`
+	Pagination pagination.PaginationMeta `json:"pagination"`
 }
 
 const baseUrl = "https://v3.openstates.org"
